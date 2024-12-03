@@ -1,0 +1,33 @@
+included:
+  - Sources
+  - Tests
+disabled_rules:
+  - file_length
+  - large_tuple
+  - nesting
+  - trailing_comma
+identifier_name:
+  allowed_symbols:
+    - _
+  excluded:
+    - x
+    - y
+    - z
+    - w
+    - dx
+    - dy
+    - dz
+    - dw
+    - id
+    - a
+    - b
+    - xs
+    - ys
+    - up
+    - fn
+    - cd
+    - ls
+    - f
+    - to
+cyclomatic_complexity:
+  ignores_case_statements: true

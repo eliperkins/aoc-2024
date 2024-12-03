@@ -13,7 +13,7 @@ public struct Day2 {
         """)
 
     public static let solution = SolutionInput.solution(
-        try! Input.day(2)
+        try! Input.day(2) // swiftlint:disable:this force_try
     )
 
     public let input: String
