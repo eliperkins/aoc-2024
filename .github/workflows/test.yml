@@ -1,0 +1,56 @@
+name: Test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  macos:
+    name: macOS
+    runs-on: macos-15-arm64
+    env:
+      AOC_SESSION: ${{ secrets.AOC_SESSION }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode version
+        run: sudo xcode-select -s /Applications/Xcode_16.2.0.app
+
+      - name: Restore Swift Package Manager cache
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Download inputs
+        run: ./Scripts/download.sh
+
+      - name: Run tests
+        run: swift test --parallel
+
+  ubuntu:
+    name: Ubuntu
+    runs-on: ubuntu-latest
+    container: swiftlang/swift:nightly
+    env:
+      AOC_SESSION: ${{ secrets.AOC_SESSION }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Restore Swift Package Manager cache
+        uses: actions/cache@v3
+        with:
+          path: .build
+          key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Download inputs
+        run: ./Scripts/download.sh
+
+      - name: Run tests
+        run: swift test --parallel
