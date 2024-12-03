@@ -9,7 +9,7 @@ on:
 jobs:
   macos:
     name: macOS
-    runs-on: macos-15-arm64
+    runs-on: macos-15
     env:
       AOC_SESSION: ${{ secrets.AOC_SESSION }}
     steps:
