@@ -13,7 +13,7 @@ public struct Day2 {
         """)
 
     public static let solution = SolutionInput.solution(
-        try! Input.day(2) // swiftlint:disable:this force_try
+        try! Input.day(2)  // swiftlint:disable:this force_try
     )
 
     public let input: String
@@ -71,13 +71,7 @@ public struct Day2 {
 
     public func solvePart2() throws -> Int {
         levels.filter { level in
-            let permutations =
-                [level]
-                + (0..<level.count).map { index in
-                    var result = level
-                    result.remove(at: index)
-                    return result
-                }
+            let permutations = [level] + level.combinations(ofCount: level.count - 1)
             return permutations.contains(where: Self.isLevelSafe(_:))
         }.count
     }
