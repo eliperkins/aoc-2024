@@ -1,4 +1,5 @@
 import AdventOfCodeKit
+import RegexBuilder
 
 public struct Day3 {
     public static let sample = """
@@ -35,14 +36,25 @@ public struct Day3 {
     }
 
     enum Instruction {
-        case `do`
+        case `do`  // swiftlint:disable:this identifier_name
         case dont
         case mul(Mul)
     }
 
+    let mulRegex = Regex {
+        "mul("
+        Capture {
+            OneOrMore(.digit)
+        }
+        ","
+        Capture {
+            OneOrMore(.digit)
+        }
+        ")"
+    }
+
     public func solvePart1() throws -> Int {
-        let regex = /mul\((\d+),(\d+)\)/
-        return input.matches(of: regex).compactMap { match -> Int? in
+        return input.matches(of: mulRegex).compactMap { match -> Int? in
             guard let lhs = Int(match.output.1), let rhs = Int(match.output.2) else { return nil }
             let mul = Mul(lhs: lhs, rhs: rhs)
             return mul.result
@@ -50,8 +62,16 @@ public struct Day3 {
     }
 
     public func solvePart2() throws -> Int {
-        let regex = /(mul\((\d+),(\d+)\)|do\(\)|don't\(\))/
-        let instructions = input.matches(of: regex).compactMap { match -> Instruction? in
+        let doDontRegex = Regex {
+            Capture {
+                ChoiceOf {
+                    mulRegex
+                    "do()"
+                    "don't()"
+                }
+            }
+        }
+        let instructions = input.matches(of: doDontRegex).compactMap { match -> Instruction? in
             switch match.output.0 {
             case "do()":
                 return .do
