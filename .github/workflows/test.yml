@@ -35,7 +35,7 @@ jobs:
   ubuntu:
     name: Ubuntu
     runs-on: ubuntu-latest
-    container: swift:noble-slim
+    container: swift:noble
     env:
       AOC_SESSION: ${{ secrets.AOC_SESSION }}
     steps:
