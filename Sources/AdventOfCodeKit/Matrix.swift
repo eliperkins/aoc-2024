@@ -1,5 +1,8 @@
 public struct Matrix<T>: CustomDebugStringConvertible {
+    @usableFromInline
     private(set) var _rows: [[T]]
+
+    @usableFromInline
     private(set) var _columns: [[T]]
 
     public init(_ xs: [[T]]) {
@@ -37,6 +40,8 @@ public struct Matrix<T>: CustomDebugStringConvertible {
         _columns
     }
 
+    @inlinable
+    @inline(__always)
     public func atPosition(x: Int, y: Int) -> T? {
         if rows.indices.contains(y) {
             let row = rows[y]
@@ -48,10 +53,14 @@ public struct Matrix<T>: CustomDebugStringConvertible {
         return nil
     }
 
+    @inlinable
+    @inline(__always)
     public func at(point: Point) -> T? {
         atPosition(x: point.x, y: point.y)
     }
 
+    @inlinable
+    @inline(__always)
     public mutating func set(value: T, x: Int, y: Int) {
         if rows.indices.contains(y) {
             let row = rows[y]
@@ -62,10 +71,14 @@ public struct Matrix<T>: CustomDebugStringConvertible {
         }
     }
 
+    @inlinable
+    @inline(__always)
     public mutating func set(value: T, point: Point) {
         set(value: value, x: point.x, y: point.y)
     }
 
+    @inlinable
+    @inline(__always)
     public func forEachPosition(_ fn: (T, (x: Int, y: Int)) -> Void) {
         rows.enumerated().forEach { (rowIndex, row) in
             row.enumerated().forEach { (columnIndex, item) in
@@ -74,6 +87,8 @@ public struct Matrix<T>: CustomDebugStringConvertible {
         }
     }
 
+    @inlinable
+    @inline(__always)
     public func forEachPoint(_ fn: (T, Point) -> Void) {
         rows.enumerated().forEach { (rowIndex, row) in
             row.enumerated().forEach { (columnIndex, item) in
@@ -82,6 +97,8 @@ public struct Matrix<T>: CustomDebugStringConvertible {
         }
     }
 
+    @inlinable
+    @inline(__always)
     public func map<U>(_ fn: (T, (x: Int, y: Int)) -> U) -> Matrix<U> {
         Matrix<U>(
             rows.enumerated().map { (rowIndex, row) in
@@ -92,6 +109,8 @@ public struct Matrix<T>: CustomDebugStringConvertible {
         )
     }
 
+    @inlinable
+    @inline(__always)
     public func collect(_ predicate: (T, (x: Int, y: Int)) -> Bool) -> [T] {
         var output = [T]()
         rows.enumerated().forEach { (rowIndex, row) in
@@ -104,6 +123,8 @@ public struct Matrix<T>: CustomDebugStringConvertible {
         return output
     }
 
+    @inlinable
+    @inline(__always)
     public func collectLocations(
         _ predicate: (T, (x: Int, y: Int)) -> Bool
     ) -> [(
@@ -120,6 +141,8 @@ public struct Matrix<T>: CustomDebugStringConvertible {
         return output
     }
 
+    @inlinable
+    @inline(__always)
     public func first(where fn: (T) -> Bool) -> T? {
         for row in rows {
             for item in row where fn(item) {
@@ -129,6 +152,8 @@ public struct Matrix<T>: CustomDebugStringConvertible {
         return nil
     }
 
+    @inlinable
+    @inline(__always)
     public func firstPosition(where fn: (T) -> Bool) -> (x: Int, y: Int)? {
         for (y, row) in rows.enumerated() {
             for (x, item) in row.enumerated() where fn(item) {

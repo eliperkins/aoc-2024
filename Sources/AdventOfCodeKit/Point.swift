@@ -16,6 +16,8 @@ public struct Point: Hashable {
         self.y = coordinates.1
     }
 
+    @inlinable
+    @inline(__always)
     public var adjacent: Set<Point> {
         [
             Point(x: x + 1, y: y),
@@ -29,6 +31,8 @@ public struct Point: Hashable {
         ]
     }
 
+    @inlinable
+    @inline(__always)
     public var cardinalAdjacent: Set<Point> {
         [
             Point(x: x + 1, y: y),
@@ -38,6 +42,8 @@ public struct Point: Hashable {
         ]
     }
 
+    @inlinable
+    @inline(__always)
     public var corners: Set<Point> {
         [
             Point(x: x + 1, y: y + 1),
@@ -47,6 +53,8 @@ public struct Point: Hashable {
         ]
     }
 
+    @inlinable
+    @inline(__always)
     public func lines(ofLength length: Int) -> [[Point]] {
         let traversalRange = 0..<length
         return [
@@ -57,6 +65,8 @@ public struct Point: Hashable {
         ]
     }
 
+    @inlinable
+    @inline(__always)
     public func diagonals(ofLength length: Int) -> [[Point]] {
         let traversalRange = 0..<length
         return [
@@ -67,6 +77,8 @@ public struct Point: Hashable {
         ]
     }
 
+    @inlinable
+    @inline(__always)
     public func centeredDiagonals(ofLength length: Int) -> [[Point]] {
         let traversalRange = stride(from: -length, through: length, by: 1)
         return [
@@ -77,6 +89,8 @@ public struct Point: Hashable {
         ]
     }
 
+    @inlinable
+    @inline(__always)
     public func manhattanDistance(to point: Point) -> Int {
         let x = abs(x - point.x)
         let y = abs(y - point.y)
