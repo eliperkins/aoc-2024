@@ -38,6 +38,45 @@ public struct Point: Hashable {
         ]
     }
 
+    public var corners: Set<Point> {
+        [
+            Point(x: x + 1, y: y + 1),
+            Point(x: x + 1, y: y - 1),
+            Point(x: x - 1, y: y + 1),
+            Point(x: x - 1, y: y - 1),
+        ]
+    }
+
+    public func lines(ofLength length: Int) -> [[Point]] {
+        let traversalRange = 0..<length
+        return [
+            traversalRange.map { i in Point(x: self.x + i, y: self.y) },
+            traversalRange.map { i in Point(x: self.x, y: self.y + i) },
+            traversalRange.map { i in Point(x: self.x - i, y: self.y) },
+            traversalRange.map { i in Point(x: self.x, y: self.y - i) },
+        ]
+    }
+
+    public func diagonals(ofLength length: Int) -> [[Point]] {
+        let traversalRange = 0..<length
+        return [
+            traversalRange.map { i in Point(x: self.x + i, y: self.y + i) },
+            traversalRange.map { i in Point(x: self.x + i, y: self.y - i) },
+            traversalRange.map { i in Point(x: self.x - i, y: self.y + i) },
+            traversalRange.map { i in Point(x: self.x - i, y: self.y - i) },
+        ]
+    }
+
+    public func centeredDiagonals(ofLength length: Int) -> [[Point]] {
+        let traversalRange = stride(from: -length, through: length, by: 1)
+        return [
+            traversalRange.map { i in Point(x: self.x + i, y: self.y + i) },
+            traversalRange.map { i in Point(x: self.x + i, y: self.y - i) },
+            traversalRange.map { i in Point(x: self.x - i, y: self.y + i) },
+            traversalRange.map { i in Point(x: self.x - i, y: self.y - i) },
+        ]
+    }
+
     public func manhattanDistance(to point: Point) -> Int {
         let x = abs(x - point.x)
         let y = abs(y - point.y)
