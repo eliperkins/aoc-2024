@@ -32,3 +32,5 @@ identifier_name:
     - i
 cyclomatic_complexity:
   ignores_case_statements: true
+opening_brace:
+  ignore_multiline_statement_conditions: true

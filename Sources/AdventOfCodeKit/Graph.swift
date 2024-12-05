@@ -89,7 +89,6 @@ public struct Graph<T> where T: Identifiable, T: Hashable {
             next.set(value: index, x: index, y: index)
         }
 
-        // swiftlint:disable opening_brace
         for k in keyLookup.keys.sorted() {
             for i in keyLookup.keys.sorted() {
                 for j in keyLookup.keys.sorted() {
@@ -109,7 +108,6 @@ public struct Graph<T> where T: Identifiable, T: Hashable {
                 }
             }
         }
-        // swiftlint:enable opening_brace
 
         var acc = [PathResult]()
         for u in keyLookup.keys.sorted() {
