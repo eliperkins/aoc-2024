@@ -116,11 +116,21 @@ public struct Day5 {
 
             return self
         }
+
+        func applying(rules: [PageOrderRule]) -> Update {
+            var mut = self
+            while !mut.passes(rules: rules) {
+                mut = rules.reduce(mut) { acc, next in
+                    acc.applying(rule: next)
+                }
+            }
+            return mut
+        }
     }
 
     public func solvePart1() throws -> Int {
         updates.reduce(0) { acc, next in
-            let passes = rules.allSatisfy { next.passes(rule: $0) }
+            let passes = next.passes(rules: rules)
             if passes {
                 return acc + next.mid
             }
@@ -129,15 +139,9 @@ public struct Day5 {
     }
 
     public func solvePart2() throws -> Int {
-        updates.filter { update in !rules.allSatisfy { update.passes(rule: $0) } }
+        updates.filter { update in !update.passes(rules: rules) }
             .map { update in
-                var mut = update
-                while !mut.passes(rules: rules) {
-                    mut = rules.reduce(mut) { acc, next in
-                        acc.applying(rule: next)
-                    }
-                }
-                return mut.mid
+                update.applying(rules: rules).mid
             }
             .reduce(0, +)
     }
