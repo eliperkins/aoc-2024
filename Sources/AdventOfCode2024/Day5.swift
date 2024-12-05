@@ -139,10 +139,12 @@ public struct Day5 {
     }
 
     public func solvePart2() throws -> Int {
-        updates.filter { update in !update.passes(rules: rules) }
-            .map { update in
-                update.applying(rules: rules).mid
+        updates.reduce(0) { acc, next in
+            if next.passes(rules: rules) {
+                return acc
             }
-            .reduce(0, +)
+
+            return acc + next.applying(rules: rules).mid
+        }
     }
 }
