@@ -162,6 +162,13 @@ public struct Matrix<T>: CustomDebugStringConvertible {
         }
         return nil
     }
+
+    @inlinable
+    @inline(__always)
+    public func contains(_ point: Point) -> Bool {
+        columns.indices.contains(point.x)
+            && rows.indices.contains(point.y)
+    }
 }
 
 extension Matrix {
@@ -208,3 +215,4 @@ extension Matrix where T: RawRepresentable, T.RawValue == Character {
 
 extension Matrix: Equatable where T: Equatable {}
 extension Matrix: Hashable where T: Hashable {}
+extension Matrix: Sendable where T: Sendable {}

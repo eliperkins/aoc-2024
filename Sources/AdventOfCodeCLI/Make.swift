@@ -12,7 +12,7 @@ struct Make: AsyncParsableCommand {
         """
         import AdventOfCodeKit
 
-        public struct Day\(options.day) {
+        public struct Day\(options.day): Sendable {
             public static let sample = \"\"\"
             \"\"\"
 
@@ -32,11 +32,11 @@ struct Make: AsyncParsableCommand {
                 self.input = inputText
             }
 
-            public func solvePart1() throws -> Int {
+            public func solvePart1() async throws -> Int {
                 0
             }
 
-            public func solvePart2() throws -> Int {
+            public func solvePart2() async throws -> Int {
                 0
             }
         }
@@ -49,22 +49,22 @@ struct Make: AsyncParsableCommand {
         import Testing
 
         @Suite("Day \(options.day)") struct Day\(options.day)Tests {
-            @Test func part1_test() throws {
+            @Test func part1_test() async throws {
                 let result = try Day\(options.day)(input: Day\(options.day).sample).solvePart1()
                 #expect(result == 1)
             }
 
-            @Test func part1_solution() throws {
+            @Test func part1_solution() async throws {
                 let result = try Day\(options.day)().solvePart1()
                 #expect(result == 1)
             }
 
-            @Test func part2_test() throws {
+            @Test func part2_test() async throws {
                 let result = try Day\(options.day)(input: Day\(options.day).sample).solvePart2()
                 #expect(result == 1)
             }
 
-            @Test func part2_solution() throws {
+            @Test func part2_solution() async throws {
                 let result = try Day\(options.day)().solvePart2()
                 #expect(result == 1)
             }

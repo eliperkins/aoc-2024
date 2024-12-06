@@ -1,4 +1,4 @@
-public struct Point: Hashable {
+public struct Point: Hashable, Sendable {
     public var x: Int
     public var y: Int
 
@@ -15,6 +15,8 @@ public struct Point: Hashable {
         self.x = coordinates.0
         self.y = coordinates.1
     }
+
+    public static let zero = Point(x: 0, y: 0)
 
     @inlinable
     @inline(__always)
