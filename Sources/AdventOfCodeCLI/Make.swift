@@ -50,22 +50,22 @@ struct Make: AsyncParsableCommand {
 
         @Suite("Day \(options.day)") struct Day\(options.day)Tests {
             @Test func part1_test() async throws {
-                let result = try Day\(options.day)(input: Day\(options.day).sample).solvePart1()
+                let result = try await Day\(options.day)(input: Day\(options.day).sample).solvePart1()
                 #expect(result == 1)
             }
 
             @Test func part1_solution() async throws {
-                let result = try Day\(options.day)().solvePart1()
+                let result = try await Day\(options.day)().solvePart1()
                 #expect(result == 1)
             }
 
             @Test func part2_test() async throws {
-                let result = try Day\(options.day)(input: Day\(options.day).sample).solvePart2()
+                let result = try await Day\(options.day)(input: Day\(options.day).sample).solvePart2()
                 #expect(result == 1)
             }
 
             @Test func part2_solution() async throws {
-                let result = try Day\(options.day)().solvePart2()
+                let result = try await Day\(options.day)().solvePart2()
                 #expect(result == 1)
             }
         }
