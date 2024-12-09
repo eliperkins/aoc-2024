@@ -2,16 +2,16 @@ import AdventOfCodeKit
 
 public struct Day7: Sendable {
     public static let sample = """
-    190: 10 19
-    3267: 81 40 27
-    83: 17 5
-    156: 15 6
-    7290: 6 8 6 15
-    161011: 16 10 13
-    192: 17 8 14
-    21037: 9 7 18 13
-    292: 11 6 16 20
-    """
+        190: 10 19
+        3267: 81 40 27
+        83: 17 5
+        156: 15 6
+        7290: 6 8 6 15
+        161011: 16 10 13
+        192: 17 8 14
+        21037: 9 7 18 13
+        292: 11 6 16 20
+        """
 
     public let input: String
     let calibrations: [Calibration]
@@ -31,7 +31,8 @@ public struct Day7: Sendable {
         self.calibrations = inputText.lines.map { line in
             let sides = line.split(separator: ":")
             guard let lhs = sides.first.flatMap(String.init).flatMap(Int.init),
-                  let rhs = sides.last.flatMap(String.init) else { fatalError() }
+                let rhs = sides.last.flatMap(String.init)
+            else { fatalError() }
 
             let components = rhs.split(separator: " ").compactMap {
                 Int(String($0))
@@ -71,7 +72,8 @@ public struct Day7: Sendable {
                 let rest = values.dropFirst(2)
                 if let lhs = firstTwo.first, let rhs = firstTwo.last {
                     let (addResult, multResult) = evaluate(lhs: lhs, rhs: rhs)
-                    return evaluate([addResult] + rest, matching: matching) || evaluate([multResult] + rest, matching: matching)
+                    return evaluate([addResult] + rest, matching: matching)
+                        || evaluate([multResult] + rest, matching: matching)
                 }
             }
 

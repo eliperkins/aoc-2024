@@ -9,7 +9,7 @@ import Testing
 
     @Test func part1_solution() async throws {
         let result = try await Day7().solvePart1()
-        #expect(result == 3598800864292)
+        #expect(result == 3_598_800_864_292)
     }
 
     @Test func part2_test() async throws {
@@ -19,6 +19,6 @@ import Testing
 
     @Test func part2_solution() async throws {
         let result = try await Day7().solvePart2()
-        #expect(result == 340362529351427)
+        #expect(result == 340_362_529_351_427)
     }
 }

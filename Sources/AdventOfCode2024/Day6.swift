@@ -64,7 +64,8 @@ public struct Day6: Sendable {
         let direction: Direction
     }
 
-    func traverse(map: Matrix<Character>, startingPoint: Point, direction: Direction) -> (Point, Collision, Set<Point>) {
+    func traverse(map: Matrix<Character>, startingPoint: Point, direction: Direction) -> (Point, Collision, Set<Point>)
+    {
         guard map.contains(startingPoint) else { fatalError("Starting point out of bounds!") }
 
         switch direction {
