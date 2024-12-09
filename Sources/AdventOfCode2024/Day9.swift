@@ -81,57 +81,97 @@ public struct Day9: Sendable {
         return checksum(compacted)
     }
 
+    struct Block: Hashable {
+        enum StorageType: Hashable {
+            case file(Int)
+            case freeSpace
+        }
+        let type: StorageType
+        let location: Int
+        let size: Int
+
+        var id: Int {
+            switch self.type {
+            case .file(let id): id
+            case .freeSpace: Int.max
+            }
+        }
+
+        var range: Range<Int> {
+            location..<(location + size)
+        }
+
+        var checksum: Int {
+            switch type {
+            case .file(let id):
+                return range.reduce(0) { acc, next in
+                    acc + (next * id)
+                }
+            case .freeSpace:
+                return 0
+            }
+        }
+    }
+
+    func createBlocks(_ diskMap: [Int]) -> ([Block], [Block]) {
+        var id = 0
+        var location = 0
+        var fileBlocks = [Block]()
+        var freeSpaceBlocks = [Block]()
+        for (i, length) in diskMap.enumerated() {
+            let isFileBlock = i % 2 == 0
+            if isFileBlock {
+                fileBlocks.append(Block(type: .file(id), location: location, size: length))
+                id += 1
+            } else {
+                freeSpaceBlocks.append(Block(type: .freeSpace, location: location, size: length))
+            }
+            location += length
+        }
+        return (fileBlocks, freeSpaceBlocks)
+    }
+
     public func solvePart2() async throws -> Int {
         guard let diskMap = input.lines.first?.compactMap({ Int(String($0)) }) else {
             fatalError("Missing disk map!")
         }
 
-        var fileRanges = OrderedSet<Range<Int>>()
-        var freeSpaceRanges = OrderedSet<Range<Int>>()
-        var blockMap = [Int: Range<Int>]()
+        let (fileBlocks, freeSpace) = createBlocks(diskMap)
+        var freeSpaceBySize = Dictionary(grouping: freeSpace, by: { element in element.size }).mapValues(Set.init)
 
-        var pointer = 0
-        for (i, id) in diskMap.enumerated() {
-            let isFileID = i % 2 == 0
-            if isFileID {
-                let fileID = fileRanges.count
-                let fileRange = pointer..<(pointer + id)
-                blockMap[fileID] = fileRange
-                fileRanges.append(fileRange)
-            } else {
-                freeSpaceRanges.append(pointer..<pointer + id)
-            }
-            pointer += id
-        }
+        func takeFirstFreeSpace(forFile file: Block, size: Int) -> Block? {
+            if let firstFreeSpace = (size..<10)
+                .flatMap({ bucket in freeSpaceBySize[bucket, default: []] })
+                .filter({ $0.location < file.location })
+                .sorted(by: { lhs, rhs in lhs.location < rhs.location })
+                .first
+            {
+                var freeSpaces = freeSpaceBySize[firstFreeSpace.size, default: []]
+                freeSpaces.remove(firstFreeSpace)
+                freeSpaceBySize[firstFreeSpace.size] = freeSpaces
 
-        for (index, fileRange) in fileRanges.enumerated().reversed() {
-            let blockSize = fileRange.count
-            if let matchingRange = freeSpaceRanges.first(where: {
-                blockSize <= $0.count && $0.startIndex < fileRange.startIndex
-            }) {
-                let newFileRange = matchingRange.startIndex..<(matchingRange.startIndex + blockSize)
-                blockMap[index] = newFileRange
-
-                if matchingRange.count > blockSize {
-                    let newRange = (matchingRange.startIndex + blockSize)..<matchingRange.endIndex
-                    if let index = freeSpaceRanges.firstIndex(of: matchingRange) {
-                        freeSpaceRanges.insert(newRange, at: index)
-                        freeSpaceRanges.remove(matchingRange)
-                    }
-                } else {
-                    freeSpaceRanges.remove(matchingRange)
+                if firstFreeSpace.size > file.size {
+                    let newBlock = Block(
+                        type: .freeSpace, location: firstFreeSpace.location + file.size,
+                        size: firstFreeSpace.size - file.size)
+                    var newFreeSpaces = freeSpaceBySize[newBlock.size, default: []]
+                    newFreeSpaces.insert(newBlock)
+                    freeSpaceBySize[newBlock.size] = newFreeSpaces
                 }
 
-                if let insertionIndex = freeSpaceRanges.firstIndex(where: { $0.endIndex > fileRange.startIndex }) {
-                    freeSpaceRanges.insert(fileRange, at: insertionIndex)
-                }
+                return firstFreeSpace
             }
+
+            return nil
         }
 
         var result = 0
-        for (fileID, range) in blockMap {
-            for x in range {
-                result += fileID * x
+        for fileBlock in fileBlocks.reversed() {
+            if let freeSpace = takeFirstFreeSpace(forFile: fileBlock, size: fileBlock.size) {
+                let block = Block(type: .file(fileBlock.id), location: freeSpace.location, size: fileBlock.size)
+                result += block.checksum
+            } else {
+                result += fileBlock.checksum
             }
         }
         return result
