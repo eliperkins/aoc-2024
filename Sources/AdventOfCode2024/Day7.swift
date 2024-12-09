@@ -32,22 +32,22 @@ public struct Day7: Sendable {
             let sides = line.split(separator: ":")
             guard let lhs = sides.first.flatMap(String.init).flatMap(Int.init),
                   let rhs = sides.last.flatMap(String.init) else { fatalError() }
-            
+
             let components = rhs.split(separator: " ").compactMap {
                 Int(String($0))
             }
             return Calibration(result: lhs, values: components)
         }
     }
-    
+
     struct Calibration: Sendable {
         let result: Int
         let values: [Int]
-        
+
         func evaluate(lhs: Int, rhs: Int) -> (Int, Int) {
             return (lhs + rhs, lhs * rhs)
         }
-        
+
         func evaluateConcat(lhs: Int, rhs: Int) -> (Int, Int, Int) {
             return (lhs + rhs, lhs * rhs, Int("\(lhs)\(rhs)")!)
         }
@@ -55,13 +55,13 @@ public struct Day7: Sendable {
         func evaluate() -> Bool {
             evaluate(values, matching: result)
         }
-        
+
         func evaluateConcat() -> Bool {
             evaluateConcat(values, matching: result)
         }
-        
+
         // MARK: - Recursive funcs
-        
+
         private func evaluate(_ values: [Int], matching: Int) -> Bool {
             if values.count == 2, let lhs = values.first, let rhs = values.last {
                 let (addResult, multResult) = evaluate(lhs: lhs, rhs: rhs)
@@ -74,10 +74,10 @@ public struct Day7: Sendable {
                     return evaluate([addResult] + rest, matching: matching) || evaluate([multResult] + rest, matching: matching)
                 }
             }
-            
+
             fatalError("Invalid number of digits!")
         }
-        
+
         private func evaluateConcat(_ values: [Int], matching: Int) -> Bool {
             if values.count == 2, let lhs = values.first, let rhs = values.last {
                 let (addResult, multResult, concatResult) = evaluateConcat(lhs: lhs, rhs: rhs)
@@ -92,7 +92,7 @@ public struct Day7: Sendable {
                         || evaluateConcat([concatResult] + rest, matching: matching)
                 }
             }
-            
+
             fatalError("Invalid number of digits!")
         }
     }
