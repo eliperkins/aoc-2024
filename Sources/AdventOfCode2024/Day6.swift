@@ -64,8 +64,12 @@ public struct Day6: Sendable {
         let direction: Direction
     }
 
-    func traverse(map: Matrix<Character>, startingPoint: Point, direction: Direction) -> (Point, Collision, Set<Point>)
-    {
+    // swiftlint:disable function_body_length
+    func traverse(
+        map: Matrix<Character>,
+        startingPoint: Point,
+        direction: Direction
+    ) -> (Point, Collision, Set<Point>) {
         guard map.contains(startingPoint) else { fatalError("Starting point out of bounds!") }
 
         switch direction {
@@ -131,6 +135,7 @@ public struct Day6: Sendable {
             return (endPoint, collision, points)
         }
     }
+    // swiftlint:enable function_body_length
 
     func createTerminatingTraversal(map: Matrix<Character>, startingPoint: Point) -> Termination {
         var startingPoint = startingPoint
@@ -141,7 +146,11 @@ public struct Day6: Sendable {
         var direction = Direction.north
 
         while collision != .outOfBounds {
-            let (p, c, d) = traverse(map: map, startingPoint: startingPoint, direction: direction)
+            let (nextPoint, nextCollision, visited) = traverse(
+                map: map,
+                startingPoint: startingPoint,
+                direction: direction
+            )
             let (inserted, _) = traversalHistory.insert(
                 TraversalHistory(startingPoint: startingPoint, direction: direction)
             )
@@ -149,9 +158,9 @@ public struct Day6: Sendable {
                 return .loop
             }
 
-            startingPoint = p
-            collision = c
-            visitedPoints.formUnion(d)
+            startingPoint = nextPoint
+            collision = nextCollision
+            visitedPoints.formUnion(visited)
             direction = direction.next()
         }
 
