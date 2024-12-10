@@ -29,6 +29,7 @@ var targets: [Target] = [
         name: "AdventOfCodeKit",
         dependencies: [
             .product(name: "Algorithms", package: "swift-algorithms"),
+            .product(name: "Collections", package: "swift-collections"),
             .product(name: "DequeModule", package: "swift-collections"),
         ]
     ),

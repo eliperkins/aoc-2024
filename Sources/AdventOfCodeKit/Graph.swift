@@ -1,3 +1,4 @@
+import Collections
 import DequeModule
 
 public struct Graph<T> where T: Identifiable, T: Hashable {
@@ -12,7 +13,10 @@ public struct Graph<T> where T: Identifiable, T: Hashable {
     }
 
     private struct BreadthFirstTraversalState {
+        @usableFromInline
         var visited: Set<T.ID>
+
+        @usableFromInline
         var deque: Deque<[T.ID]>
     }
 
@@ -46,6 +50,26 @@ public struct Graph<T> where T: Identifiable, T: Hashable {
         }
 
         return []
+    }
+
+    public func findAllPaths(from: T, to: T) -> [[T]] {
+        func findAllPaths(from: T, to: T, path: OrderedSet<T>) -> [OrderedSet<T>] {
+            var path = path
+            path.append(from)
+
+            if from == to {
+                return [path]
+            }
+
+            return map[from.id, default: []].flatMap { adjacent in
+                if let next = storage[adjacent], !path.contains(next) {
+                    return findAllPaths(from: next, to: to, path: path)
+                }
+                return []
+            }
+        }
+
+        return findAllPaths(from: from, to: to, path: []).map(Array.init)
     }
 
     public struct PathResult: Hashable {

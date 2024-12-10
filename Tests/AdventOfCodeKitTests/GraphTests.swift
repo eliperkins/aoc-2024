@@ -49,6 +49,16 @@ struct GraphTests {
         ])
         #expect(possiblePaths.subtracting(aPaths).count == 1)
     }
+
+    @Test func findAllPaths() throws {
+        let paths = graph.findAllPaths(from: "A", to: "E")
+        #expect(paths.count == 2)
+
+        let first = try #require(paths.first)
+        #expect(first == ["A", "B", "C", "E"])
+        let last = try #require(paths.last)
+        #expect(last == ["A", "B", "D", "E"])
+    }
 }
 
 extension String: @retroactive Identifiable {
