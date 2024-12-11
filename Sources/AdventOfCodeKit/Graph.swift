@@ -6,10 +6,33 @@ public struct Graph<T> where T: Identifiable, T: Hashable {
     private let map: [T.ID: [T.ID]]
 
     public init(
-        items: [T], map: [T.ID: [T.ID]]
+        items: [T],
+        map: [T.ID: [T.ID]]
     ) {
         self.storage = Dictionary(uniqueKeysWithValues: zip(items.map(\.id), items))
         self.map = map
+    }
+
+    private func neighbors(of node: T) -> [T] {
+        if let neighborIDs = map[node.id] {
+            return neighborIDs.compactMap { storage[$0] }
+        }
+        return []
+    }
+
+    private func neighbors(of nodeID: T.ID) -> [T] {
+        if let neighborIDs = map[nodeID] {
+            return neighborIDs.compactMap { storage[$0] }
+        }
+        return []
+    }
+
+    private func neighborIDs(of node: T) -> [T.ID] {
+        map[node.id] ?? []
+    }
+
+    private func neighborIDs(of nodeID: T.ID) -> [T.ID] {
+        map[nodeID] ?? []
     }
 
     private struct BreadthFirstTraversalState {
@@ -29,7 +52,7 @@ public struct Graph<T> where T: Identifiable, T: Hashable {
             sequence(state: initialState) { state -> [T]? in
                 if let path = state.deque.popFirst() {
                     guard let nodeID = path.last else { return nil }
-                    for neighborID in map[nodeID, default: []] where !state.visited.contains(neighborID) {
+                    for neighborID in neighborIDs(of: nodeID) where !state.visited.contains(neighborID) {
                         let (inserted, _) = state.visited.insert(neighborID)
                         if inserted {
                             state.deque.append(path + [neighborID])
@@ -38,11 +61,12 @@ public struct Graph<T> where T: Identifiable, T: Hashable {
                     return path.compactMap { storage[$0] }
                 }
                 return nil
-            })
+            }
+        )
     }
 
     public func breadthFirstSearch(from: T, to: T) -> [T] {
-        for path in breadthFirstTraversal(from: from) {
+        for path in breadthFirstTraversal(from: from).lazy {
             guard let position = path.last else { return [] }
             if position.id == to.id {
                 return path
@@ -52,24 +76,70 @@ public struct Graph<T> where T: Identifiable, T: Hashable {
         return []
     }
 
-    public func findAllPaths(from: T, to: T) -> [[T]] {
-        func findAllPaths(from: T, to: T, path: OrderedSet<T>) -> [OrderedSet<T>] {
-            var path = path
-            path.append(from)
+    public func depthFirstTraversal(from: T) -> [T] {
+        var path = OrderedSet<T.ID>()
+        var stack = Deque([from.id])
+        while let nodeID = stack.popFirst() {
+            path.append(nodeID)
+            let nextNodes = neighborIDs(of: nodeID)
+            for node in nextNodes where !path.contains(node) {
+                stack.prepend(node)
+            }
+        }
+        return path.compactMap { storage[$0] }
+    }
 
-            if from == to {
-                return [path]
+    public func depthFirstSearch(from: T, to: T) -> [T] {
+        var visited = Set<T.ID>()
+        var stack = Deque<[T]>()
+
+        stack.append([from])
+
+        while let path = stack.popLast() {
+            let node = path.last!
+
+            if visited.contains(node.id) {
+                continue
             }
 
-            return map[from.id, default: []].flatMap { adjacent in
-                if let next = storage[adjacent], !path.contains(next) {
-                    return findAllPaths(from: next, to: to, path: path)
-                }
-                return []
+            visited.insert(node.id)
+
+            if node.id == to.id {
+                return path
+            }
+
+            for neighbor in neighbors(of: node) where !visited.contains(neighbor.id) {
+                var newPath = path
+                newPath.append(neighbor)
+                stack.prepend(newPath)
             }
         }
 
-        return findAllPaths(from: from, to: to, path: []).map(Array.init)
+        return []
+    }
+
+    public func findAllPaths(from: T, to: T) -> [[T]] {
+        var result = [[T]]()
+        var stack = Deque<[T]>()
+
+        stack.append([from])
+
+        while let path = stack.popLast() {
+            let currentNode = path.last!
+
+            if currentNode.id == to.id {
+                result.append(path)
+                continue
+            }
+
+            for neighbor in neighbors(of: currentNode) where !path.contains(neighbor) {
+                var newPath = path
+                newPath.append(neighbor)
+                stack.prepend(newPath)
+            }
+        }
+
+        return result
     }
 
     public struct PathResult: Hashable {

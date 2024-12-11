@@ -59,6 +59,16 @@ struct GraphTests {
         let last = try #require(paths.last)
         #expect(last == ["A", "B", "D", "E"])
     }
+
+    @Test func depthFirstTraversal() throws {
+        let path = graph.depthFirstTraversal(from: "A")
+        #expect(path == ["A", "B", "D", "E", "C"])
+    }
+
+    @Test func depthFirstSearch() throws {
+        let path = graph.depthFirstSearch(from: "A", to: "E")
+        #expect(path == ["A", "B", "C", "E"])
+    }
 }
 
 extension String: @retroactive Identifiable {

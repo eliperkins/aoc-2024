@@ -101,9 +101,12 @@ public struct Day10: Sendable {
     struct Position: Hashable, Identifiable {
         let point: Point
         let value: Int
+        let id: String
 
-        var id: String {
-            "\(point.x)-\(point.y)-\(value)"
+        init(point: Point, value: Int) {
+            self.point = point
+            self.value = value
+            self.id = "\(point.x)-\(point.y)-\(value)"
         }
     }
 
@@ -121,7 +124,9 @@ public struct Day10: Sendable {
     }
 
     public func solvePart1() async throws -> Int {
-        let map = Matrix(string: input).map({ char, _ in TrailMarker(character: char) })
+        let map = Matrix(string: input).map({ char, _ in
+            TrailMarker(character: char)
+        })
         var items = [Position]()
         var lookupMap = [Position.ID: [Position.ID]]()
 
