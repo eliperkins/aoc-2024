@@ -125,8 +125,7 @@ public struct Day12: Sendable {
         }
 
         var bulkDiscountPrice: Int {
-            print("\(id): \(points.count * corners) = \(points.count) * \(corners)")
-            return points.count * corners
+            points.count * corners
         }
     }
 
