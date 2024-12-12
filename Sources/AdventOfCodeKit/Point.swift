@@ -37,10 +37,10 @@ public struct Point: Hashable, Sendable {
     @inline(__always)
     public var cardinalAdjacent: Set<Point> {
         [
-            Point(x: x + 1, y: y),
-            Point(x: x - 1, y: y),
-            Point(x: x, y: y + 1),
-            Point(x: x, y: y - 1),
+            north,
+            east,
+            south,
+            west,
         ]
     }
 
@@ -98,4 +98,53 @@ public struct Point: Hashable, Sendable {
         let y = abs(y - point.y)
         return x + y
     }
+
+    @inlinable
+    @inline(__always)
+    public var north: Point {
+        Point(x: self.x, y: self.y - 1)
+    }
+
+    @inlinable
+    @inline(__always)
+    public var south: Point {
+        Point(x: self.x, y: self.y + 1)
+    }
+
+    @inlinable
+    @inline(__always)
+    public var east: Point {
+        Point(x: self.x + 1, y: self.y)
+    }
+
+    @inlinable
+    @inline(__always)
+    public var west: Point {
+        Point(x: self.x - 1, y: self.y)
+    }
+
+    @inlinable
+    @inline(__always)
+    public var northEast: Point {
+        Point(x: self.x + 1, y: self.y - 1)
+    }
+
+    @inlinable
+    @inline(__always)
+    public var southEast: Point {
+        Point(x: self.x + 1, y: self.y + 1)
+    }
+
+    @inlinable
+    @inline(__always)
+    public var southWest: Point {
+        Point(x: self.x - 1, y: self.y + 1)
+    }
+
+    @inlinable
+    @inline(__always)
+    public var northWest: Point {
+        Point(x: self.x - 1, y: self.y - 1)
+    }
+
 }
