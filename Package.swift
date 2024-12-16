@@ -18,6 +18,10 @@ var targets: [Target] = [
         resources: [
             .copy("Inputs")
         ],
+        cSettings: [
+            .define("ACCELERATE_NEW_LAPACK"),
+            .define("ACCELERATE_LAPACK_ILP64"),
+        ],
         swiftSettings: [
             .unsafeFlags([
                 "-O",
