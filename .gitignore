@@ -8,4 +8,4 @@ DerivedData/
 .swiftpm/xcode/package.xcworkspace/contents.xcworkspacedata
 .netrc
 
-Sources/AdventOfCode2024/Inputs/*.txt
+Sources/AdventOfCode*/Inputs/*.txt
