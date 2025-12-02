@@ -1,12 +1,35 @@
-// swift-tools-version: 6.0
+// swift-tools-version: 6.2
 
 import PackageDescription
 
 var products: [Product] = [
+    .library(name: "AdventOfCode2025", targets: ["AdventOfCode2025"]),
     .library(name: "AdventOfCode2024", targets: ["AdventOfCode2024"]),
     .library(name: "AdventOfCodeKit", targets: ["AdventOfCodeKit"]),
 ]
 var targets: [Target] = [
+    .target(
+        name: "AdventOfCode2025",
+        dependencies: [
+            .product(name: "Algorithms", package: "swift-algorithms"),
+            .product(name: "Collections", package: "swift-collections"),
+            .product(name: "Numerics", package: "swift-numerics"),
+            .target(name: "AdventOfCodeKit"),
+        ],
+        resources: [
+            .copy("Inputs")
+        ],
+        cSettings: [
+            .define("ACCELERATE_NEW_LAPACK"),
+            .define("ACCELERATE_LAPACK_ILP64"),
+        ],
+        swiftSettings: [
+            .unsafeFlags([
+                "-O",
+                "-cross-module-optimization",
+            ])
+        ]
+    ),
     .target(
         name: "AdventOfCode2024",
         dependencies: [
@@ -38,6 +61,10 @@ var targets: [Target] = [
         ]
     ),
     .testTarget(
+        name: "AdventOfCode2025Tests",
+        dependencies: ["AdventOfCode2025"]
+    ),
+    .testTarget(
         name: "AdventOfCode2024Tests",
         dependencies: ["AdventOfCode2024"]
     ),
@@ -48,8 +75,8 @@ var targets: [Target] = [
 ]
 var dependencies: [Package.Dependency] = [
     .package(url: "https://github.com/apple/swift-algorithms", from: "1.2.1"),
-    .package(url: "https://github.com/apple/swift-collections", from: "1.2.1"),
-    .package(url: "https://github.com/apple/swift-numerics", from: "1.0.3"),
+    .package(url: "https://github.com/apple/swift-collections", from: "1.3.0"),
+    .package(url: "https://github.com/apple/swift-numerics", from: "1.1.1"),
 ]
 #if os(macOS) || os(Linux)
     products.append(.executable(name: "aoc-cli", targets: ["AdventOfCodeCLI"]))
@@ -61,11 +88,11 @@ var dependencies: [Package.Dependency] = [
             ]
         ))
     dependencies.append(
-        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.5.0"))
+        .package(url: "https://github.com/apple/swift-argument-parser", from: "1.6.2"))
 #endif
 
 let package = Package(
-    name: "AdventOfCode2024",
+    name: "AdventOfCode",
     platforms: [.macOS(.v15)],
     products: products,
     dependencies: dependencies,
