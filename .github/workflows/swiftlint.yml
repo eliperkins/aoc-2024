@@ -9,9 +9,9 @@ on:
 jobs:
   SwiftLint:
     runs-on: ubuntu-latest
+    container:
+      image: norionomura/swiftlint:swift-6.2.0
     steps:
       - uses: actions/checkout@v6
       - name: SwiftLint
-        uses: norio-nomura/action-swiftlint@3.2.1
-        with:
-          args: --strict
+        run: swiftlint lint --strict --reporter github-actions-logging
