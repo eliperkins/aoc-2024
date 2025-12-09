@@ -73,6 +73,18 @@ public struct Matrix<T>: CustomDebugStringConvertible {
 
     @inlinable
     @inline(__always)
+    public mutating func set(value: (T) -> T, x: Int, y: Int) {
+        if rows.indices.contains(y) {
+            let row = rows[y]
+            if row.indices.contains(x) {
+                _rows[y][x] = value(_rows[y][x])
+                _columns[x][y] = value(_columns[x][y])
+            }
+        }
+    }
+
+    @inlinable
+    @inline(__always)
     public mutating func set(value: T, point: Point) {
         set(value: value, x: point.x, y: point.y)
     }

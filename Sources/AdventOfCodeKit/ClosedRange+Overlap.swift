@@ -14,6 +14,7 @@ extension ClosedRange where Bound: SignedInteger, Bound.Stride: SignedInteger {
 
     @inlinable
     public func merging(with range: ClosedRange<Bound>) -> ClosedRange<Bound> {
-        lowerBound...range.upperBound
+        precondition(self.overlaps(range), "Ranges do not overlap!")
+        return Swift.min(lowerBound, range.lowerBound)...Swift.max(upperBound, range.upperBound)
     }
 }
