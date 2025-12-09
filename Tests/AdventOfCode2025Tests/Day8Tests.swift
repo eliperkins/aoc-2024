@@ -19,6 +19,6 @@ import Testing
 
   @Test func part2_solution() async throws {
     let result = try await Day8().solvePart2()
-    #expect(result == 1)
+    #expect(result == 6_083_499_488)
   }
 }
