@@ -1,6 +1,5 @@
 import AdventOfCodeKit
 import Foundation
-import simd
 
 public struct Day8: Sendable {
   public static let sample = """
@@ -57,7 +56,7 @@ public struct Day8: Sendable {
       xs
       .combinations(ofCount: 2)
       .sorted(by: { lhs, rhs in
-        simd.distance(lhs[0], lhs[1]) < simd.distance(rhs[0], rhs[1])
+        lhs[0].euclideanDistance(to: lhs[1]) < rhs[0].euclideanDistance(to: rhs[1])
       })
       .prefix(connectionCount)
 
@@ -97,7 +96,7 @@ public struct Day8: Sendable {
       xs
       .combinations(ofCount: 2)
       .sorted(by: { lhs, rhs in
-        simd.distance(lhs[0], lhs[1]) > simd.distance(rhs[0], rhs[1])
+        lhs[0].euclideanDistance(to: lhs[1]) > rhs[0].euclideanDistance(to: rhs[1])
       })
 
     var circuits: [UUID: Set<Node>] = [:]
@@ -120,5 +119,31 @@ public struct Day8: Sendable {
     }
 
     return Int(lastConnection[0].x * lastConnection[1].x)
+  }
+}
+
+#if canImport(simd)
+  import simd
+#endif
+
+extension SIMD3 where Scalar == Float {
+  func euclideanDistance(to other: SIMD3<Scalar>) -> Scalar {
+    #if canImport(simd)
+      simd.distance(self, other)
+    #else
+      let diff = self - other
+      return (diff * diff).sum().squareRoot()
+    #endif
+  }
+}
+
+extension SIMD3 where Scalar == Double {
+  func euclideanDistance(to other: SIMD3<Scalar>) -> Scalar {
+    #if canImport(simd)
+      simd.distance(self, other)
+    #else
+      let diff = self - other
+      return (diff * diff).sum().squareRoot()
+    #endif
   }
 }
