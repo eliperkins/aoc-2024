@@ -64,7 +64,6 @@ public struct Day5: Sendable {
         resultingRanges.append(nextRange)
       }
     }
-    print(resultingRanges)
     return resultingRanges.reduce(0) { $0 + $1.count }
   }
 }
