@@ -225,6 +225,20 @@ extension Matrix where T: RawRepresentable, T.RawValue == Character {
     }
 }
 
-extension Matrix: Equatable where T: Equatable {}
+extension Matrix: Equatable where T: Equatable {
+    public mutating func floodFill(from point: Point, newValue: T) {
+        guard let oldValue = at(point: point) else { return }
+        guard oldValue != newValue else { return }
+
+        func fill(from point: Point, oldValue: T, newValue: T) {
+            set(value: newValue, point: point)
+            let neighbors = point.adjacent
+            for neighbor in neighbors where at(point: neighbor) == oldValue {
+                fill(from: neighbor, oldValue: oldValue, newValue: newValue)
+            }
+        }
+        fill(from: point, oldValue: oldValue, newValue: newValue)
+    }
+}
 extension Matrix: Hashable where T: Hashable {}
 extension Matrix: Sendable where T: Sendable {}

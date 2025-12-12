@@ -1,7 +1,7 @@
 import Collections
 import DequeModule
 
-public struct Graph<T> where T: Identifiable, T: Hashable {
+public struct Graph<T>: @unchecked Sendable where T: Identifiable, T: Hashable {
     private let storage: [T.ID: T]
     private let map: [T.ID: [T.ID]]
 
@@ -120,22 +120,25 @@ public struct Graph<T> where T: Identifiable, T: Hashable {
 
     public func findAllPaths(from: T, to: T) -> [[T]] {
         var result = [[T]]()
-        var stack = Deque<[T]>()
+        var stack = Deque<([T.ID], Set<T.ID>)>()
 
-        stack.append([from])
+        stack.append(([from.id], [from.id]))
 
-        while let path = stack.popLast() {
-            let currentNode = path.last!
+        while let (pathIDs, visited) = stack.popLast() {
+            let currentID = pathIDs.last!
 
-            if currentNode.id == to.id {
+            if currentID == to.id {
+                let path = pathIDs.compactMap { storage[$0] }
                 result.append(path)
                 continue
             }
 
-            for neighbor in neighbors(of: currentNode) where !path.contains(neighbor) {
-                var newPath = path
-                newPath.append(neighbor)
-                stack.prepend(newPath)
+            for neighborID in neighborIDs(of: currentID) where !visited.contains(neighborID) {
+                var newPathIDs = pathIDs
+                newPathIDs.append(neighborID)
+                var newVisited = visited
+                newVisited.insert(neighborID)
+                stack.prepend((newPathIDs, newVisited))
             }
         }
 
