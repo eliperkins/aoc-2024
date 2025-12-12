@@ -19,7 +19,7 @@ jobs:
         run: sudo xcode-select -s /Applications/Xcode_26.2.app
 
       - name: Restore Swift Package Manager cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .build
           key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
@@ -42,7 +42,7 @@ jobs:
       - uses: actions/checkout@v6
 
       - name: Restore Swift Package Manager cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .build
           key: ${{ runner.os }}-spm-${{ hashFiles('Package.resolved') }}
