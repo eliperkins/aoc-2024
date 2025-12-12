@@ -32,8 +32,11 @@ public struct Day1: Sendable {
     var counter = 50
     var zeroes = 0
     for line in input.lines {
-      let direction = line.first!
-      let distance = Int(line.dropFirst())!
+      guard let direction = line.first,
+        let distance = Int(line.dropFirst())
+      else {
+        continue
+      }
       switch direction {
       case "L":
         counter -= distance
@@ -59,9 +62,13 @@ public struct Day1: Sendable {
     var counter = 50
     var passesByZero = 0
     for line in input.lines {
-      let direction = line.first!
+      guard let direction = line.first,
+        let distance = Int(line.dropFirst())
+      else {
+        continue
+      }
+
       let startingPosition = counter
-      let distance = Int(line.dropFirst())!
       switch direction {
       case "L":
         counter -= distance

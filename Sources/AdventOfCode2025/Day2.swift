@@ -23,10 +23,11 @@ public struct Day2: Sendable {
   }
 
   public func solvePart1() async throws -> Int {
-    let ranges = input.split(separator: ",").map { rangeText in
+    let ranges: [ClosedRange<Int>] = input.split(separator: ",").compactMap { rangeText in
       let rangeParts = rangeText.split(separator: "-")
-      let start = Int(rangeParts[0])!
-      let end = Int(rangeParts[1])!
+      guard let start = Int(rangeParts[0]), let end = Int(rangeParts[1]) else {
+        return nil
+      }
       return start...end
     }
 
@@ -57,10 +58,11 @@ public struct Day2: Sendable {
   }
 
   public func solvePart2() async throws -> Int {
-    let ranges = input.split(separator: ",").map { rangeText in
+    let ranges: [ClosedRange<Int>] = input.split(separator: ",").compactMap { rangeText in
       let rangeParts = rangeText.split(separator: "-")
-      let start = Int(rangeParts[0])!
-      let end = Int(rangeParts[1])!
+      guard let start = Int(rangeParts[0]), let end = Int(rangeParts[1]) else {
+        return nil
+      }
       return start...end
     }
 
